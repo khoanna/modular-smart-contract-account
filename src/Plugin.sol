@@ -20,14 +20,11 @@ contract CounterPlugin is IPlugin {
     // --- THE MANIFEST ---
     function pluginManifest() external pure override returns (PluginManifest memory) {
         PluginManifest memory manifest;
-        
+
         // Define execution functions
         manifest.executionFunctions = new ManifestFunction[](1);
-        manifest.executionFunctions[0] = ManifestFunction({
-            selector: this.increment.selector,
-            permissionId: 0 
-        });
-        
+        manifest.executionFunctions[0] = ManifestFunction({selector: this.increment.selector, permissionId: 0});
+
         // Defaults for other fields
         manifest.permitAnyExternalAddress = false;
         manifest.canSpendNativeToken = false;
@@ -36,6 +33,6 @@ contract CounterPlugin is IPlugin {
     }
 
     function onInstall(bytes calldata) external {}
-    
+
     function onUninstall(bytes calldata) external {}
 }

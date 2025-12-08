@@ -13,10 +13,10 @@ contract BaseSetup is Test {
     ModularAccount internal account;
     CounterPlugin internal plugin;
 
-    uint256 internal _aliceKey=1;
+    uint256 internal _aliceKey = 1;
     address internal _aliceAddress = VM.addr(_aliceKey);
 
-    uint256 internal _bobKey=2;
+    uint256 internal _bobKey = 2;
     address internal _bobAddress = VM.addr(_bobKey);
 
     function setUp() public {
@@ -61,7 +61,7 @@ contract AccountTest is BaseSetup {
         account.installPlugin(address(plugin), "");
 
         VM.prank(_aliceAddress);
-        (bool success, ) = address(account).call(abi.encodeWithSignature("increment()"));
+        (bool success,) = address(account).call(abi.encodeWithSignature("increment()"));
         assert(success);
 
         uint256 count = plugin.getCount(address(account));

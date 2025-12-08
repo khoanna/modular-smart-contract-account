@@ -11,7 +11,7 @@ contract ModularAccount is IERC6900 {
     // --- STORAGE ---
     // Maps Function Selector -> Plugin Address
     mapping(bytes4 => address) public selectorToPlugin;
-    
+
     // Maps Plugin Address -> Boolean (Is installed)
     mapping(address => bool) public installedPlugins;
 
@@ -24,7 +24,7 @@ contract ModularAccount is IERC6900 {
         _onlyOwner();
         _;
     }
-    
+
     function _onlyOwner() internal view {
         require(msg.sender == owner, "Auth: Only owner");
     }
@@ -32,13 +32,13 @@ contract ModularAccount is IERC6900 {
     // --- INSTALLATION LOGIC ---
     function installPlugin(address pluginAddr, bytes calldata data) external override onlyOwner {
         require(!installedPlugins[pluginAddr], "Plugin already installed");
-        
+
         // A. Fetch the Manifest
         IPlugin plugin = IPlugin(pluginAddr);
         PluginManifest memory manifest = plugin.pluginManifest();
 
         // B. Update Router Mappings
-        for (uint i = 0; i < manifest.executionFunctions.length; i++) {
+        for (uint256 i = 0; i < manifest.executionFunctions.length; i++) {
             bytes4 sel = manifest.executionFunctions[i].selector;
             require(selectorToPlugin[sel] == address(0), "Selector collision");
             selectorToPlugin[sel] = pluginAddr;
@@ -59,7 +59,7 @@ contract ModularAccount is IERC6900 {
         PluginManifest memory manifest = plugin.pluginManifest();
 
         // B. Update Router Mappings
-        for (uint i = 0; i < manifest.executionFunctions.length; i++) {
+        for (uint256 i = 0; i < manifest.executionFunctions.length; i++) {
             bytes4 sel = manifest.executionFunctions[i].selector;
             require(selectorToPlugin[sel] == pluginAddr, "Selector mismatch");
             selectorToPlugin[sel] = address(0);
@@ -73,13 +73,13 @@ contract ModularAccount is IERC6900 {
     }
 
     // --- 2. EXECUTION ROUTING ---
-    
+
     // A. Standard Execute (Direct calls from Owner)
-    function execute(address target, uint256 value, bytes calldata data) 
-        external 
-        override 
-        onlyOwner 
-        returns (bytes memory) 
+    function execute(address target, uint256 value, bytes calldata data)
+        external
+        override
+        onlyOwner
+        returns (bytes memory)
     {
         (bool success, bytes memory result) = target.call{value: value}(data);
         require(success, "Execute failed");
@@ -103,6 +103,6 @@ contract ModularAccount is IERC6900 {
             return(add(result, 32), mload(result))
         }
     }
-    
+
     receive() external payable {}
 }
