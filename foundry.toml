@@ -3,7 +3,18 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+# ENABLE THE OPTIMIZER
+optimizer = true
+
+# CRITICAL CHANGE: Set runs to 1
+# This tells the compiler: "Make the bytecode as small as possible."
+# (Trade-off: Functions cost slightly more gas to run, but the contract fits).
+optimizer_runs = 1
+
+# ENABLE VIA_IR
+# This uses the modern Yul pipeline, which is much better at removing
+# dead code and optimizing stack usage, often saving 1-2KB.
+via_ir = true
 
 [rpc_endpoints]
 sepolia = "${SEPOLIA_RPC_URL}"
